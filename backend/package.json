@@ -1,0 +1,32 @@
+{
+  "name": "Nasa project backend",
+  "version": "1.0.0",
+  "description": "Nasa mission control web server",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/server.js",
+    "watch": "nodemon src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sheiguey/Nasa-Project.git"
+  },
+  "keywords": [
+    "NodeJs/express"
+  ],
+  "author": "shiti franky",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sheiguey/Nasa-Project/issues"
+  },
+  "homepage": "https://github.com/sheiguey/Nasa-Project#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "csv-parse": "^5.5.2",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

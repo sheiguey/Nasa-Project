@@ -1,5 +1,10 @@
+const API_URL = 'http://localhost:8000'
+
 async function httpGetPlanets() {
   // TODO: Once API is ready.
+  const response = await fetch(`${API_URL}/getallplanets`)
+  const data = await response.json();
+  return data;
   // Load planets and return as JSON.
 }
 
@@ -9,7 +14,7 @@ async function httpGetLaunches() {
 }
 
 async function httpSubmitLaunch(launch) {
-  // TODO: Once API is ready.
+  // TODO: Once API is ready.*`
   // Submit given launch data to launch system.
 }
 
