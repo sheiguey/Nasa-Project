@@ -16,6 +16,18 @@ const launch ={
 
 launches.set(launch.flightNumber,launch);
 
+function existLaunchWithId(lauchId){
+   return launches.has(lauchId)
+}
+
+function abortLaunchById(lauchId){
+   const aborded = launches.get(lauchId)
+   aborded.upcoming=false,
+   aborded.success = false
+
+   return aborded
+}
+
 function addNewLaunche(launch){
    lauchNumber +=1;
    launches.set(lauchNumber,Object.assign(launch,{
@@ -32,4 +44,4 @@ function getLaunches(){
 }
 
 
-module.exports ={getLaunches,addNewLaunche}
+module.exports ={getLaunches,addNewLaunche,existLaunchWithId,abortLaunchById}
