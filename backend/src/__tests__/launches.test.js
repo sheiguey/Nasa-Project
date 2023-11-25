@@ -9,6 +9,7 @@ describe('Test Get /launches',()=>{
    })
 })
 
+
 describe('Test Post /launches',()=>{
     const completeLaunchData = {
         mission:'Cameroon space enterprise',
@@ -30,6 +31,7 @@ describe('Test Post /launches',()=>{
         target:'Kepler 186 f',
         launchDate:'zuuut'
     }
+
 
     test('it should respond with status code 201 created',async()=>{
         const response= await request(app).post('/launches')
@@ -54,7 +56,6 @@ describe('Test Post /launches',()=>{
        expect(response.body).toStrictEqual({
         error:'Missing require lauch property'
     });
-       
     })
 
 
@@ -64,7 +65,6 @@ describe('Test Post /launches',()=>{
         .expect('Content-Type',/json/)
         .expect(400);
 
-        
        expect(response.body).toStrictEqual({
         error:'invalid date'
     });
