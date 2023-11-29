@@ -6,7 +6,7 @@ const { loadPlanetsData } = require('./models/planets.model');
 const {launch,saveLaunch} = require('./models/lauches.model')
 
 
-const PORT = process.env.PORT || 8000 ;
+const PORT = process.env.PORT || 3030 ;
 
 
 
