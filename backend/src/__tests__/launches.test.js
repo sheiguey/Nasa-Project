@@ -1,34 +1,46 @@
-const request = require('supertest')
-const app = require('../app')
+const request = require('supertest');
 
+const {mongoConnect,mongoDisconnect} = require('../utils/mongo');
+
+const app = require('../app');
+
+describe('tests for launches API endpoint', ()=>{
+
+beforeAll(async()=>{
+await mongoConnect();
+},300000);
+
+afterAll(async()=>{
+    await mongoDisconnect();
+});
+  
 describe('Test Get /launches',()=>{
     test('the request should respond with 200',async ()=>{
        const response= await request(app).get('/launches')
        .expect('Content-Type',/json/)
        .expect(200);
-   })
-})
-
+   },200000)
+});
 
 describe('Test Post /launches',()=>{
     const completeLaunchData = {
         mission:'Cameroon space enterprise',
         rocket:'NCC 1701-D',
-        target:'Kepler 186 f',
+        target:'Kepler 62 f',
         launchDate:'January 4,2028'
     }
 
     const launchDataWithoutDate = {
         mission:'Cameroon space enterprise',
         rocket:'NCC 1701-D',
-        target:'Kepler 186 f',
+        target:'Kepler 62 f',
       
     }
 
     const launchDataWithInvalidDate = {
         mission:'Cameroon space enterprise',
         rocket:'NCC 1701-D',
-        target:'Kepler 186 f',
+        target:'Kepler 62 f',
         launchDate:'zuuut'
     }
 
@@ -45,7 +57,7 @@ describe('Test Post /launches',()=>{
        expect(requestDate).toBe(responseDate);
        expect(response.body).toMatchObject(launchDataWithoutDate);
 
-    })
+    },200000)
 
     test('it should catch missing required properties',async()=>{
         const response= await request(app).post('/launches')
@@ -56,7 +68,7 @@ describe('Test Post /launches',()=>{
        expect(response.body).toStrictEqual({
         error:'Missing require lauch property'
     });
-    })
+    },200000)
 
 
     test('it should catch invalid date',async()=>{
@@ -68,6 +80,8 @@ describe('Test Post /launches',()=>{
        expect(response.body).toStrictEqual({
         error:'invalid date'
     });
-    })
+    },200000)
+
+})
 
 })

@@ -1,14 +1,13 @@
-const {getLaunches,addNewLaunche,existLaunchWithId,abortLaunchById}=require('../models/lauches.model')
+const {getLaunches,scheduleNewLaunch,existLaunchWithId,abortLaunchById}=require('../models/lauches.model')
 
 
-function httpGetAllLaunches(req,res){
-    return res.status(200).json(getLaunches());
+async function httpGetAllLaunches(req,res){
+    return res.status(200).json(await getLaunches());
 }
 
 
 function httpAddNewLaunche(req,res){
     const launch = req.body;
-
     if(!launch.mission || !launch.launchDate || !launch.rocket || !launch.target){
         return res.status(400).json({
             error:'Missing require lauch property'
@@ -23,21 +22,29 @@ function httpAddNewLaunche(req,res){
         })  
     }
 
-    addNewLaunche(launch);
+    scheduleNewLaunch(launch) ;
     return res.status(201).json(launch);
 }
 
-function httpDeleteLaunche(req,res){
-  const lauchId = +req.params.id
-  const aborded = abortLaunchById(lauchId)
+async function httpDeleteLaunche(req,res){
+  const lauchId = +req.params.id;
+ 
+  const existLaunch = await existLaunchWithId(lauchId);
 
-  if(!existLaunchWithId(lauchId)){
+  if(!existLaunch){
     return res.status(400).json({
         error:'Launch not found'
     })
   }
-
-  return res.status(200).json(aborded)
+  const aborded = await abortLaunchById(lauchId);
+  if(!aborded){
+    return res.status(400).json({
+        error:'Launch not aborded',
+    })
+  }
+  return res.status(200).json({
+    ok:true
+  });
 
 }
 

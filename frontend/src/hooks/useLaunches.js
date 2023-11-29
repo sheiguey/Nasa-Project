@@ -37,7 +37,7 @@ function useLaunches(onSuccessSound, onAbortSound, onFailureSound) {
    
     const success = response.ok;
     if (success) {
-      getLaunches();
+     await getLaunches();
       setTimeout(() => {
         setPendingLaunch(false);
         onSuccessSound();
@@ -52,7 +52,7 @@ function useLaunches(onSuccessSound, onAbortSound, onFailureSound) {
     console.log(response)
     const success = response.ok;
     if (success) {
-      getLaunches();
+      await getLaunches();
       onAbortSound();
     } else {
       onFailureSound();
