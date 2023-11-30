@@ -6,8 +6,8 @@ const lauchesRouter =require('./lauches.route')
 const api = express()
 
 
-api.use('v1/planets',planetsRouter);
-api.use('v1/launches',lauchesRouter);
+api.use('/planets',planetsRouter);
+api.use('/launches',lauchesRouter);
 
 
 module.exports= api;

@@ -17,7 +17,7 @@ describe('test for planets API',()=>{
 
   describe('Test for /planets',()=>{
       test('Get planet with response code 200',async ()=>{
-        const response = await request(app).get('/planets')
+        const response = await request(app).get('/v1/planets')
           .expect('Content-Type',/json/)
           .expect(200);
       },500000)
