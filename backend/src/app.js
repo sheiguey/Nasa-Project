@@ -12,9 +12,9 @@ const lauchesRouter = require('./routes/lauches.route')
 
 const app = express();
 
-app.use(cors({
+/* app.use(cors({
     origin:"http://localhost:3000"
-}))
+})) */
 
 app.use(morgan('combined'))
 
