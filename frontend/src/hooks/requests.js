@@ -1,4 +1,4 @@
-const API_URL = 'https://nasa-project-8a7z.onrender.com/'
+const API_URL = 'https://nasa-project-8a7z.onrender.com'
 
  // Load planets and return as JSON.
 async function httpGetPlanets() {
