@@ -14,25 +14,8 @@ async function getLatestFlightNumber(){
    return latestLaunch.flightNumber
 }
 
-const launch ={
-   flightNumber: 100,
-   mission:'kepler exploration x',
-   rocket:'explorer IS1',
-   launchDate:new Date('December 27 2030'),
-   target:'Kepler-442 b',
-   Customer:['ZTM','NASA'],
-   upcoming:true,
-   success:true
-}
 
 async function saveLaunch(launch){
-   const target = await planets.findOne({
-      keplerName:launch.target,
-   });
-
-   if(!target){
-      throw new Error('the target doesn\'t exist in the database check the lis of planets aigain')
-   }
    try{
      await launchesDatabase.findOneAndUpdate({
       flightNumber:launch.flightNumber
@@ -44,56 +27,10 @@ async function saveLaunch(launch){
    }
 }
 
-//launches.set(launch.flightNumber,launch);
-
-async function existLaunchWithId(launchId){
-   //return launches.has(lauchId)
-  return await launchesDatabase.findOne({
-      flightNumber:launchId
-   })
-}
-
-async function abortLaunchById(launchId){
-   const aborted = await launchesDatabase.updateOne({flightNumber:launchId},{
-        upcoming:false,
-        success:false
-   }) 
- 
-   return aborted.acknowledged===true ;
-}
-
-
-async function scheduleNewLaunch(launch){
-   const newFlightNumber = await getLatestFlightNumber() + 1
-   const newlauch = Object.assign(launch,{
-      flightNumber:newFlightNumber,
-      Customer:['Zero To Mastery','NASA'],
-      upcoming:true,
-      success:true
-   })
-   await saveLaunch(newlauch)
-}
-
-/* function addNewLaunche(launch){
-   lauchNumber +=1;
-   launches.set(lauchNumber,Object.assign(launch,{
-      flightNumber:lauchNumber,
-      Customer:['Zero To Mastery','NASA'],
-      upcoming:true,
-      success:true
-   }));
-} */
-
-async function getLaunches(){
-   //return Array.from(launches.values()) from mocks data
-   return await launchesDatabase
-   .find({},{'__id':0,'__v':0})
-}
-
-async function loadLaunchData(){
-  const response =  await axios.post(SPACEX_API_URL,{
+async function getLaunchDataFromSpaceX(){
+   const response =  await axios.post(SPACEX_API_URL,{
       query:{},
-      option:{
+      options:{
          pagination:false,
          populate:[
             {
@@ -112,32 +49,89 @@ async function loadLaunchData(){
       }
     })
 
+    if(response.status===!200){
+      console.log('something went wrong while loading the spaceX data');
+      throw new Error('load spaceX data launches failed')
+    }
     const lauchDocs = response.data.docs;
-   
+
     for (const lauchDoc of lauchDocs){
       const rocket = lauchDoc['rocket']['name'];
       const payloads = lauchDoc['payloads'];
       const customers =payloads.flatMap((payload)=>{
          return payload['customers'];
       })
-      
-      console.log(payloads);
-      console.log(rocket);
-      
 
       const lauch={
          flightNumber: lauchDoc['flight_number'],
          mission:lauchDoc['name'],
-         rocket:lauchDoc['rocket']['name'],
+         rocket:rocket,
          launchDate:lauchDoc['date_local'],
          Customer:customers,
          upcoming:lauchDoc['upcoming'],
          success:lauchDoc['success'],
       }
-      
+      await saveLaunch(lauch)
     }
-
 }
 
+//load launch data from spaceXAPI To our database
+async function loadLaunchData(){
+  const firstLaunch = await findLaunch({
+      flightNumber:1,
+      rocket:'Falcon 1',
+      mission:'FalconSat'
+   })
 
-module.exports ={getLaunches,scheduleNewLaunch,existLaunchWithId,abortLaunchById,saveLaunch,launch,loadLaunchData}
+   if(firstLaunch){
+      console.log('spaceX launch data already exist');
+   }else{
+     await getLaunchDataFromSpaceX();
+   }
+ }
+
+async function findLaunch(filter){
+   return await launchesDatabase.findOne(filter)
+}
+
+async function existLaunchWithId(launchId){
+  return await findLaunch({
+      flightNumber:launchId
+   })
+}
+
+async function abortLaunchById(launchId){
+   const aborted = await launchesDatabase.updateOne({flightNumber:launchId},{
+        upcoming:false,
+        success:false
+   }) 
+   return aborted.acknowledged===true;
+}
+
+async function scheduleNewLaunch(launch){
+   const target = await planets.findOne({
+      keplerName:launch.target,
+   });
+
+   if(!target){
+      throw new Error('the target doesn\'t exist in the database check the lis of planets aigain')
+   }
+   const newFlightNumber = await getLatestFlightNumber() + 1
+   const newlauch = Object.assign(launch,{
+      flightNumber:newFlightNumber,
+      Customer:['Zero To Mastery','NASA'],
+      upcoming:true,
+      success:true
+   })
+   await saveLaunch(newlauch)
+}
+
+async function getLaunches(skip,limit){
+   return await launchesDatabase
+   .find({},{'__id':0,'__v':0})
+   .sort({flightNumber:1})
+   .skip(skip)
+   .limit(limit)
+}
+
+module.exports ={getLaunches,scheduleNewLaunch,existLaunchWithId,abortLaunchById,saveLaunch,loadLaunchData}

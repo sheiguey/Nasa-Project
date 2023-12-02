@@ -1,8 +1,11 @@
 const {getLaunches,scheduleNewLaunch,existLaunchWithId,abortLaunchById}=require('../models/lauches.model')
+const {getPagination} = require('../utils/pagination')
 
 
 async function httpGetAllLaunches(req,res){
-    return res.status(200).json(await getLaunches());
+    const {skip,limit} = getPagination(req.query);
+    const launches = await getLaunches(skip,limit)
+    return res.status(200).json(launches);
 }
 
 
