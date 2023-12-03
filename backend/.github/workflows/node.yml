@@ -13,5 +13,5 @@ name : Nasa project CI
          with:
             node-version:'16'
         -run  : npm install
-        -run  : npm run build --prefix client
+        -run  : npm run build --prefix frontend
 
