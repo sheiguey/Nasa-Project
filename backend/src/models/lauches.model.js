@@ -16,6 +16,7 @@ async function getLatestFlightNumber(){
 
 
 async function saveLaunch(launch){
+   console.log(launch);
    try{
      await launchesDatabase.findOneAndUpdate({
       flightNumber:launch.flightNumber
