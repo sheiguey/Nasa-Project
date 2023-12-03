@@ -1,6 +1,5 @@
 name: Nasa project CI
-  on:
-    push:
+  on: push
       branches: [ main ]
     pull-request:
       branches: [ main ]
