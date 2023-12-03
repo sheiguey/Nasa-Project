@@ -11,7 +11,7 @@ async function httpGetAllLaunches(req,res){
 
 function httpAddNewLaunche(req,res){
     const launch = req.body;
-    if(!launch.mission || !launch.launchDate || !launch.rocket || !launch.target){
+    if(!launch.mission || !launch.launchDate || !launch.rocket ){
         return res.status(400).json({
             error:'Missing require lauch property'
         })

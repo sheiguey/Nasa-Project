@@ -16,7 +16,6 @@ async function getLatestFlightNumber(){
 
 
 async function saveLaunch(launch){
-   console.log(launch);
    try{
      await launchesDatabase.findOneAndUpdate({
       flightNumber:launch.flightNumber
@@ -106,7 +105,7 @@ async function abortLaunchById(launchId){
         upcoming:false,
         success:false
    }) 
-   return aborted.acknowledged===true;
+   return aborted;
 }
 
 async function scheduleNewLaunch(launch){
