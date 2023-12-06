@@ -1,4 +1,12 @@
+
+//for production render
 const API_URL = 'https://localhost:10000/v1';
+
+//for production in aws
+//const API_URL = 'v1';
+
+//for test
+//const API_URL = 'http://localhost:8000/v1';
 
  // Load planets and return as JSON.
 async function httpGetPlanets() {
